@@ -7,3 +7,7 @@ weights
 build/
 *.egg-info/
 gradio_cached_examples
+.vscode
+input/
+output/
+Testprojekt/
