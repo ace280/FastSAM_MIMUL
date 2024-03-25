@@ -10,9 +10,9 @@ def get_arguments():
 
     parser = argparse.ArgumentParser(prog='MIMUL FastSAM', description='Implements FastSAM for use on MIMUL Piano Roll heads.')
     parser.add_argument('-d', '--device', type=str,  required=False, default='cpu', help='The computing device to work on. To work on graphics card use \'CUDA\', default is \'cpu\'')
-    parser.add_argument('-w', '--working_directory', type=str, required=True, help='Path to the working directory with inputs and outpus.')
-    parser.add_argument('-ma', '--manufacturer', type=str, required=False, help='The piano roll manufacturer. This argument is for better sorting while testing')
-    parser.add_argument('-t', '--target', type=str, required=True, help='The object that should be segmented. This is for sorting only.')
+    parser.add_argument('-io', '--input_output_directory', type=str, required=True, help='Path to the working directory with inputs and outpus.')
+    parser.add_argument('-ma', '--manufacturer', type=str, required=True, help='The piano roll manufacturer.')
+    parser.add_argument('-t', '--target', type=str, required=True, help='The object that should be segmented.')
     parser.add_argument('-i', '--input', type=str, required=True, help='The file name of the picture (without extention) to be segmented. (Only tested with JPG.)')
     parser.add_argument('-m', '--mode', type=str, required=True, default='box', help='The mode to use for manually marking the location of the label or licence stamp. For box mode type \'box\'. for points mode use \'points\'.')
     parser.add_argument('-b', '--box', type=str, required=False, help='The box of the label or stamp. Requires format like in FastSAM: bbox default shape [0,0,0,0] -> [x1,y1,x2,y2] Example: box = [[1692, 882, 440, 508]]')
@@ -44,8 +44,8 @@ def main():
     args = get_arguments()
 
     model = FastSAM('./weights/FastSAM-x.pt')
-    image_path = f'{args.working_directory}/{args.manufacturer}/Input/{args.input}.jpg'
-    output_path = f'{args.working_directory}/{args.manufacturer}/Outputs/{args.target}/FastSAM results/{args.mode}/'
+    image_path = f'{args.input_output_directory}/{args.manufacturer}/Input/{args.input}.jpg'
+    output_path = f'{args.input_output_directory}/{args.manufacturer}/Outputs/{args.target}/FastSAM results/{args.mode}/'
     # DEVICE = 'CUDA'
     everything_results = model(image_path, device=args.device, retina_masks=True, imgsz=1024, conf=0.4, iou=0.9,)
     prompt_process = FastSAMPrompt(image_path, everything_results, device=args.device)
